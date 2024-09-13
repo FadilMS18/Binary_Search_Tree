@@ -40,5 +40,5 @@ function RDMergeSort(array){
     return mergeSort(noDup)
 }
 
-let array = [10, 2, 7, 4, 4, 10, 7]
-console.log(RDMergeSort(array))
+// export { RDMergeSort }
+
