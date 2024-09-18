@@ -43,15 +43,19 @@ class BST {
     return tree // As recursive return every new branches after inserting new node 
   }
 
+  // Delete function that will delete a node then replace it with it child(in order) if there is  
   static deleteItem(tree, value){
     if(tree == null){ // if tree is null or the value given is not in the tree then return tree
       return tree
     }
+
     if(value > tree.data){ // if value given is higher than current data, then run recursion to right subtree
       tree.right = BST.deleteItem(tree.right, value)
-    }else if(value < tree.data){ // if value given is lower than the current data then run recursion to left subtree
+    }
+    else if(value < tree.data){ // if value given is lower than the current data then run recursion to left subtree
       tree.left = BST.deleteItem(tree.left, value)
-    }else{ // the value given is the same with current node
+    }
+    else{ // the value given is the same with current node
       if(tree.left === null){ // if there is right child assign right child to the current node, delete current node or return null if no child
         return tree.right
       }
@@ -67,6 +71,7 @@ class BST {
     return tree // return tree after every recursion
   }
 
+  // Find function that will return a node if found otherwise return null
   static find(tree, value){
     if(tree == null)return tree // return tree or null if value is not caught in the tree
     if(tree.data == value){ // return tree if the given value is in the current tree
@@ -79,39 +84,68 @@ class BST {
     }
   }
 
+  // Breadth first traversal  will return an array that is a sorted array with breadth first traversal rules
   static levelOrderLoops(tree){
     // if(typeof(callback) !== 'function') throw new Error('Callback argument must be a function')
-    if(tree == null) return null
-    let array = []
-    let queue = []
-    queue.push(tree)
-    while(queue.length){
-      let current = queue.shift()
-      array.push(current.data)
+    if(tree == null) return null // if tree or node is null then return because pointer has reach the end of tree
+    let array = [] // array that will be a return value of the function
+    let queue = [] // queue will be temporary array for enqueue & dequeue node child
+    queue.push(tree) // push current node to the queue
+    while(queue.length){ // loops will stop after the queue length is null or the tree has been traverse entirely
+      let current = queue.shift() // copy the current node 
+      array.push(current.data) // push current data to array or dequeuing the tree form the queue
       if(current.left){
-        queue.push(current.left)
+        queue.push(current.left) // if there is left subtree then add/enqueue the left subtree to the queue
       }
       if(current.right){
-        queue.push(current.right)
+        queue.push(current.right) // if there is right subtree then do it enqueue as well
       }
     }
-    return array
+    return array // return the array after the queue adn enqueue is done 
   }
 
+  // Recursion function for the breadth first traversal
   static levelOrderRecursion(tree ,array = [], queue = []){
-    if(tree == null)return
-    array.push(tree.data)
+    if(tree == null)return // if tree is null then return, base case
+    array.push(tree.data) // dequeue the current data and add it to array
 
-    if(tree.left !== null) queue.push(tree.left)
-    if(tree.right !== null) queue.push(tree.right)
+    if(tree.left !== null) queue.push(tree.left) // enqueue left subtree if present
+    if(tree.right !== null) queue.push(tree.right) // enqueue right subtree if present as well
 
-    while(queue.length){
-      let current = queue.shift()
-      BST.levelOrderRecursion(current, array, queue)
+    while(queue.length){ // run loops if queue is not empty
+      let current = queue.shift() // copy the first item in the queue
+      BST.levelOrderRecursion(current, array, queue) // run recursion with the current node or current node that we dequeue
     }
     return array   
   }
-}
+
+  // Depth first traversal in_order recursion function <Left><Data><Right>
+  static inOrder(tree, array = []){
+    if(tree == null) return // base case for left subtree or right subtree if the pointer has reach the end
+    BST.inOrder(tree.left, array) // run through the tree if there is left subtree then run it over again
+    array.push(tree.data) // once it reach the left or right subtree then add it to the array
+    BST.inOrder(tree.right, array) // after left subtree is finish then run through right subtree
+    return array // return in order sorted array
+  }
+
+  // Depth first traversal pre_order recursion function <Data><Left><Right>
+  static preOrder(tree, array = []){
+    if(tree == null) return
+    array.push(tree.data) // Similar to in_order function but we push the data as the pointer goes to the left & then right after left is done
+    BST.preOrder(tree.left, array)
+    BST.preOrder(tree.right, array)
+    return array
+  }
+  
+  // Depth first traversal post_order recursion function <Left><Right><Data><Data>
+  static postOrder(tree, array = []){
+    if(tree == null) return 
+    BST.postOrder(tree.left, array)
+    BST.postOrder(tree.right, array)
+    array.push(tree.data) // in post order we traverse to left subtree until we hit the leaf then go to right subtree of the left subtree then add the data
+    return array
+  }
+} 
 
 
 
@@ -134,3 +168,12 @@ console.log(BST.find(binarySearchTree, 324))
 console.log(BST.levelOrderLoops(binarySearchTree))
 console.log(BST.levelOrderRecursion(binarySearchTree))
 // Not sure what's callback should i use so i just use simple loops and recursion that will return an array of level order traversal
+
+// Depth first traversal in order
+console.log(BST.inOrder(binarySearchTree))
+
+// Depth first traversal pre order
+console.log(BST.preOrder(binarySearchTree))
+
+// Depth first traversal post order
+console.log(BST.postOrder(binarySearchTree))
