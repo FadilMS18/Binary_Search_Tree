@@ -36,9 +36,9 @@ function removeDuplicates(array){
 }
 
 function RDMergeSort(array){
-    let noDup = removeDuplicates(array)
-    return mergeSort(noDup)
+    let sort = mergeSort(array)
+    return removeDuplicates(sort)
 }
 
-// export { RDMergeSort }
+export { RDMergeSort }
 

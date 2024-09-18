@@ -19,4 +19,5 @@ function findSuc(root) {
 }
 
 
-// export{ prettyPrint, findSuc }
+
+export{ prettyPrint, findSuc,  }

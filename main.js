@@ -1,5 +1,5 @@
-// import { RDMergeSort } from './mergeSort.js'
-// import{findSuc, prettyPrint} from './helper.js'
+import { RDMergeSort } from './mergeSort.js'
+import{findSuc, prettyPrint} from './helper.js'
 console.clear();
 
 
@@ -31,6 +31,7 @@ class BST {
 
   // Insert method to add new root on the leaf of the tree, although it gonna make the tree unbalanced
   static insert(tree, value){
+    if(BST.find(tree, value)) return 
     if(tree == null){ // Base Case, when the pointer reach the leaf then make a new root
       let root = new Root(value)
       return root
@@ -105,7 +106,7 @@ class BST {
   }
 
   // Recursion function for the breadth first traversal
-  static levelOrderRecursion(tree ,array = [], queue = []){
+  static levelOrderRecursion(tree, array = [], queue = []){
     if(tree == null)return // if tree is null then return, base case
     array.push(tree.data) // dequeue the current data and add it to array
 
@@ -145,7 +146,56 @@ class BST {
     array.push(tree.data) // in post order we traverse to left subtree until we hit the leaf then go to right subtree of the left subtree then add the data
     return array
   }
-} 
+
+  // getHeight(node) to return
+  static getNodeHeight(tree, node){
+    let nodeDepth = BST.getDepth(tree, node)
+    let treeHeight = BST.getTreeHeight(tree)
+    let nodeHeight = treeHeight - nodeDepth
+    return nodeHeight
+  }
+
+  // getTreeHeight
+  static getTreeHeight(tree){
+    if(tree == null) return 0
+
+    let left = BST.getTreeHeight(tree.left)
+    let right = BST.getTreeHeight(tree.right)
+    return (left > right) ? left + 1 : right + 1
+  }
+
+  // getDepth(node) to return depth of a node    
+  static getDepth(tree, node, depth = 0){
+    if(tree == null) return null
+    if(node > tree.data){
+      depth += 1
+      return BST.getDepth(tree.right, node, depth)
+      
+    }else if(node < tree.data){
+      height += 1
+      return BST.getDepth(tree.left, node, depth)
+    }else return depth
+  }
+
+  // IsBalance(tree)
+  static isBalanced(tree) {
+    const nodes = BST.inOrder(tree);
+    for (let i = 0; i < nodes.length; i++) {
+      const node = BST.find(nodes[i]);
+      const leftSubtree = BST.getNodeHeight(node.left);
+      const rightSubtree = BST.getNodeHeight(node.right);
+      if (Math.abs(leftSubtree - rightSubtree) > 1) return 'Tree is not balanced';
+    }
+    return 'Tree is balanced';
+  }
+
+  // Re balance(tree)
+  static reBalanced(tree){
+    let inOrderArr = BST.inOrder(tree)
+    return BST.createBST(inOrderArr, 0, inOrderArr.length - 1)
+  }
+}
+ 
 
 
 
@@ -153,6 +203,11 @@ let binarySearchTree = BST.createBST(fixArray, 0, fixArray.length - 1);
 
 // Insert method
 BST.insert(binarySearchTree, 50)
+BST.insert(binarySearchTree, 2)
+BST.insert(binarySearchTree, 6)
+BST.insert(binarySearchTree, 10)
+BST.insert(binarySearchTree, 10)
+
 
 
 // Delete Node Method
@@ -177,3 +232,18 @@ console.log(BST.preOrder(binarySearchTree))
 
 // Depth first traversal post order
 console.log(BST.postOrder(binarySearchTree))
+
+// TreeHeight, nodeHeight & nodeDepth
+console.log(BST.getTreeHeight(binarySearchTree))
+console.log(BST.getTreeHeight(binarySearchTree.left))
+console.log(BST.getTreeHeight(binarySearchTree.right))
+
+console.log(BST.getNodeHeight(binarySearchTree, 324))
+
+console.log(BST.getDepth(binarySearchTree, 324))
+
+
+console.log(BST.isBalanced(binarySearchTree))
+
+let rebalancedTree = BST.reBalanced(binarySearchTree)
+prettyPrint(rebalancedTree)
